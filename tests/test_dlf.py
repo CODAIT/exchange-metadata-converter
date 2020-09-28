@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import metadata_converter.convert as c
+# import metadata_converter.apply as
+from metadata_converter.apply import generate
+from metadata_converter.apply import PlaceholderNotFoundError
 import unittest
 import yaml
 
@@ -31,19 +33,19 @@ class TestDLF(unittest.TestCase):
 
         try:
             # should raise PlaceholderNotFoundError('name')
-            c.generate(in_yaml, self.template)
+            generate(in_yaml, self.template)
             self.assertTrue(False)
-        except c.PlaceholderNotFoundError as pnfe:
-            self.assertEqual(str(pnfe), 'name')
+        except PlaceholderNotFoundError as pnfe:
+            self.assertEqual(pnfe.placeholder, 'name')
 
         in_yaml['name'] = 'name'
 
         try:
             # should raise PlaceholderNotFoundError('repository.url')
-            c.generate(in_yaml, self.template)
+            generate(in_yaml, self.template)
             self.assertTrue(False)
-        except c.PlaceholderNotFoundError as pnfe:
-            self.assertEqual(str(pnfe), 'repository.url')
+        except PlaceholderNotFoundError as pnfe:
+            self.assertEqual(pnfe.placeholder, 'repository.url')
 
         in_yaml['repository'] = {
             'url': 'https://www.google.com'
@@ -51,10 +53,10 @@ class TestDLF(unittest.TestCase):
 
         try:
             # should raise PlaceholderNotFoundError('repository.mime_type')
-            c.generate(in_yaml, self.template)
+            generate(in_yaml, self.template)
             self.assertTrue(False)
-        except c.PlaceholderNotFoundError as pnfe:
-            self.assertEqual(str(pnfe), 'repository.mime_type')
+        except PlaceholderNotFoundError as pnfe:
+            self.assertEqual(pnfe.placeholder, 'repository.mime_type')
 
         self.assertTrue(True)
 
@@ -70,7 +72,7 @@ class TestDLF(unittest.TestCase):
 
         try:
             # should succeed
-            lines = c.generate(in_yaml, self.template)
+            lines = generate(in_yaml, self.template)
             out_yaml = yaml.load('\n'.join(lines), Loader=yaml.FullLoader)
             self.assertEqual(out_yaml['apiVersion'], 'com.ibm/v1alpha1')
             self.assertEqual(out_yaml['kind'], 'Dataset')

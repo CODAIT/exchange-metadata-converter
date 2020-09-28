@@ -22,25 +22,24 @@ The package should pass flake8 and the unit tests in the [`/tests`](/tests) dire
  $ python -m unittest tests/*.py
  ```
 
-
 ## Running the converter
 
 Display help:
 
 ```
-$ python metadata_converter/convert.py -h
+$ python metadata_converter/apply.py -h
 ```
 
 Replace `{{...}}` placeholders in `my.template` with values from `my.yaml`. The completed template is displayed on STDOUT.
 
 ```
-$ python metadata_converter/convert.py my.yaml my.template
+$ python metadata_converter/apply.py my.yaml my.template
 ```
 
 Replace `{{...}}` placeholders in `my.template` with values from `my.yaml`. The completed template is stored in `my_completed.template`.
 
 ```
-$ python metadata_converter/convert.py my.yaml my.template -o my_completed.template
+$ python metadata_converter/apply.py my.yaml my.template -o my_completed.template
 ```
 
 ## Examples
