@@ -1,0 +1,16 @@
+# top level list
+- item 1
+- item 2
+---
+# string list
+string_list:
+  - property item 1
+  - property item 2
+  - property item 3
+dict_list:
+  - property1: value1a
+  - property1: value1b
+    property2: value2a
+  - property1: value1c
+    property2: value2b
+    property3: value3a

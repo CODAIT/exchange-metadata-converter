@@ -1,4 +1,3 @@
----
 id: lorem-ipsum-data-set            # Unique data set id (required)
 name: Lorem ipsum data set          # User friendly data set name (required)
 description: Lorem ipsum            # Data set description (required)
