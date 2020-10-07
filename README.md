@@ -42,9 +42,13 @@ Replace `{{...}}` placeholders in `my.template` with values from `my.yaml`. The 
 $ python metadata_converter/apply.py my.yaml my.template -o my_completed.template
 ```
 
-## Examples
+## Templates
 
-Example templates and YAML file can be found in [samples/](/samples).
+Example template files for DLF and OpenAIHub can be found in the [templates/](/templates) directory.
+
+## DAX data set descriptors
+
+Descriptor files for DAX data sets can be found in the [dax-data-set-descriptors/](/dax-data-set-descriptors) directory.
 
 ## License
 

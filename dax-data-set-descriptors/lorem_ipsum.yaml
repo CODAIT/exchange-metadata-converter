@@ -19,16 +19,31 @@ provider:                           # Information about the repository that make
 # identifies where the data set is stored and how it is stored (REQUIRED)
 repository:
   type: HTTP                         # 
-  url: http://.../loremipsum.tar.gz  # Data set file download URL
-  mime_type: application/x-tar       # Data set file MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
+  url: http://.../loremipsum.tar.gz  # Data set archive download URL
+  mime_type: application/x-tar       # Data set archive MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
   sha_512: cf83e135...7eefb          # SHA-512 checksum of the data set file
-  size: 12 M                         # Data set file size including units (E, P, T, G, M, K) (which isn't necessarily the size of the data file)
+  size: 12M                          # Data set archive size including units (E, P, T, G, M, K) (which isn't necessarily the size of the data file)
 
 # REQUIRED; data set license information
 license:
-  # TBD comercial license indicator?
+  commercial: false                  # if true, a commercial license (assume false if not set)
   name: CDLA-Sharing                 # License name
   url: https://cdla.io/sharing-1-0/  # Link to public license text
+
+# REQUIRED; describes relevant files in the data set archive
+content:
+  - file_name: path/lorem-ipsum1.csv  # includes path
+    description: l-i training data    # free form text describing the file content
+    records: 5000                     # including units (E, P, T, G, M, K), if applicable
+    size: 1M                          # size including units (E, P, T, G, M, K), if applicable
+    type: CSV                         # file format (user friendly)
+    mime_type: text/csv               # File MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
+  - file_name: path/lorem-ipsum2.csv  # includes path
+    description: l-i test data        # free form text describing the file content
+    records: 3000                     # including units (E, P, T, G, M, K), if applicable
+    size: 500K                        # size including units (E, P, T, G, M, K), if applicable
+    type: CSV                         # file format (user friendly)
+    mime_type: text/csv               # File MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
 
 # OPTIONAL; Identifies where the data set was obtained from
 source:
