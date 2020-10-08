@@ -20,7 +20,7 @@ repository:
   type: HTTP 
   url: https://dax-cdn.cdn.appdomain.cloud/dax-publaynet/1.0.0/publaynet.tar.gz
   mime_type: application/x-tar
-  sha_512:
+  sha_512: 087a58aeed533f953c041dc03e5f14bc0b1bf53c44fa1f5816fde7c0376174b1b67c837d93094f96fd6313aba172c914c7bc2d14c6f84b58913c0ddd550264eb
   size: 96G
 
 # REQUIRED; data set license information
@@ -53,7 +53,7 @@ source:
 # OPTIONAL; but recommended
 seo_tags:
   - Document Layout Analysis
-  - text
+  - Text
 
 # OPTIONAL; assets that complement this data set, e.g. notebooks
 related_assets:
