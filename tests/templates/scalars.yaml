@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and 
 # limitations under the License.
-apiVersion: com.ibm/v1alpha1
-kind: Dataset
-metadata:
-  name: '{{name}}'
-spec:
-  type: 'ARCHIVE'
-  url: '{{repository.url}}'
-  format: '{{repository.mime_type}}'
+apiVersion:                             # not replaced (no value)
+kind: Dataset                           # not replaced (no placeholder)
+metadata: '{{level0_1}}'                # replaced with "value1"
+basic: 'scalar1'                        # not replaced (no placeholder)
+anton:                                  # not replaced (no value)
+delta: '{{level0_3.level1_1}}'          # replaced with "value3" 
+caesar: scalar2                         # not replaced
+gamma: '{{level0_3.level1_2.level2_1}}' # replaced with "value4"

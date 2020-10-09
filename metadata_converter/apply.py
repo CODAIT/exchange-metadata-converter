@@ -27,83 +27,98 @@ class PlaceholderNotFoundError(Exception):
         super().__init__(self.message)
 
 
-# Raised if template contains a placeholder
-# which cannot be properly resolved
-class PlaceholderTypeNotSupportedError(Exception):
-    def __init__(self, placeholder, type):
-        self.placeholder = placeholder
-        self.type = type
-        self.message = 'Type "{}" is not supported for placeholder "{}".'\
-            .format(type, placeholder)
-        super().__init__(self.message)
+def replace(yaml_dict, template_dict):
+    """Replace matched {{...}} in template_dict with values from yaml_dict
 
+    :param yaml_dict: dict representation of a YAML document defining
+    placeholder values
+    :type yaml_dict: dict
+    :param template_dict: dict representation of a YAML document containing
+    '{{...}}' string placeholders
+    :type template_dict: dict
+    :raises PlaceholderNotFoundError: a {{...}} placeholder in template_dict
+    was not found in yaml_dict
+    :raises ValueError: at least one input parameter is invalid
+    :raises NotImplementedError: [description]
+    :return: yaml_dict with all '{{...}}' replaced
+    :rtype: dict
+    """
 
-def generate(yaml_dict, template):
+    # pre-compile the {{...}} placeholder search expression
+    # outside `do_replace` to avoid doing it multiple times
+    p = re.compile(r'{{([\w\.]+)}}', re.VERBOSE)
 
-    # Helper; attempts to resolve a placeholder
-    # using the values provided in yaml_dict
-    # Raises PlaceholderNotFoundError
-    def replace_placeholder(match):
-        root = yaml_dict
-
-        for property in match.group(1).split('.'):
-            root = root.get(property)
-            if root is None:
-                raise PlaceholderNotFoundError(match.group(1))
-
-        return root
-
-    if yaml_dict is None or template is None:
-        # nothing to do
-        return None
-
-    # compile the {{...}} placeholder search expression
-    p = re.compile('{{([a-zA-Z_.]+)}}', re.VERBOSE)
-
-    template_out = []
-    # replace placeholders in the template
-    for line in template:
-        r = p.search(line)
+    def process_string(yaml_dict, str):
+        # determine whether {{...}} placeholder
+        # replacement is required
+        r = p.search(str)
         if r is None:
-            template_out.append(line)
-            continue
+            return str
+        else:
+            root = yaml_dict
+            for property in r.group(1).split('.'):
+                root = root.get(property)
+                if root is None:
+                    raise PlaceholderNotFoundError(r.group(1))
+            return root
 
-        replacements = replace_placeholder(r)
-        if isinstance(replacements, str):
-            template_out.append(
-                line[:r.start()] +
-                replacements + line[r.end():])
-        elif isinstance(replacements, list):
-            for replacement in replacements:
-                if isinstance(replacement, str):
-                    # "- <replacement>"
-                    template_out.append(
-                            line[:r.start()] + '- ' +
-                            replacement + line[r.end():])
-                elif isinstance(replacement, dict):
-                    is_first = True
-                    for key in replacement.keys():
-                        # "- <replacement_key>: <replacement_value>"
-                        if is_first:
-                            template_out.append(
-                                line[:r.start()] + '- ' +
-                                key + ': ' +
-                                replacement[key] +
-                                line[r.end():])
-                            is_first = False
-                        else:
-                            # "  <replacement_key>: <replacement_value>"
-                            template_out.append(
-                                line[:r.start()] + '  ' +
-                                key + ': ' +
-                                replacement[key] +
-                                line[r.end():])
-                else:
-                    raise PlaceholderTypeNotSupportedError(
-                            r.group(1),
-                            type(replacement))
+    def process_list(yaml_dict, list_in):
+        list_out = []
+        for v in list_in:
+            # if v is a string process it
+            if(isinstance(v, str)):
+                list_out.append(process_string(yaml_dict, v))
+            elif(isinstance(v, dict)):
+                list_out.append(do_replace(yaml_dict, v))
+            elif(isinstance(v, list)):
+                list_out.append(process_list(yaml_dict, v))
+            else:
+                raise NotImplementedError(
+                        'Support for properties of type {} in lists '
+                        'is not implemented.'
+                        .format(type(v)))
+        return list_out
 
-    return template_out
+    # Recursive function does the actual work
+    def do_replace(yaml_dict, template_dict):
+
+        if yaml_dict is None or template_dict is None:
+            # nothing to do
+            return None
+
+        if not isinstance(yaml_dict, dict):
+            raise ValueError('Parameter \'yaml_dict\' must be of type '
+                             '\'dict\' not {}.'.format(type(yaml_dict)))
+
+        if not isinstance(template_dict, dict):
+            raise ValueError('Parameter \'template_dict\' must be of type '
+                             '\'dict\' not {}.'.format(type(template_dict)))
+
+        template_out = {}
+        # replace placeholders in the template, one value at a time
+        for key in template_dict.keys():
+            val = template_dict[key]
+            # print('Key: {} Value: {} Type: {}'.format(key, val, type(val)))
+            if val is None:
+                # NoneType - no value
+                template_out[key] = None
+            elif isinstance(val, str):
+                # process string
+                template_out[key] = process_string(yaml_dict, val)
+            elif isinstance(val, dict):
+                # process the dictionary recursively
+                template_out[key] = do_replace(yaml_dict, val)
+            elif isinstance(val, list):
+                # process each list item
+                template_out[key] = process_list(yaml_dict, val)
+            else:
+                raise NotImplementedError(
+                        'Support for properties of type {} is not implemented.'
+                        .format(type(val)))
+
+        return template_out
+
+    return do_replace(yaml_dict, template_dict)
 
 
 # Main entry point
@@ -119,6 +134,11 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', default=None,
                         help='Output file name. If not specified '
                               'output is sent to STDOUT.')
+    parser.add_argument('--yaml_dump_null_as_empty',
+                        action='store_true',
+                        help='If specified, null values are dumped '
+                             'as empty string, e.g. "mykey: null" is '
+                             'dumped as "mykey: "')
     args = parser.parse_args()
 
     try:
@@ -128,18 +148,32 @@ if __name__ == "__main__":
 
         # load template
         with open(args.template, 'r') as template_file:
-            in_template = template_file.readlines()
+            in_template = yaml.load(template_file, Loader=yaml.FullLoader)
 
         # replace placeholders in template
-        completed_template = generate(in_yaml, in_template)
+        out_yaml = replace(in_yaml, in_template)
+
+        if args.yaml_dump_null_as_empty:
+            # dump NoneType as an empty string `` instead of `null`
+            yaml.SafeDumper.add_representer(
+                type(None),
+                lambda dumper, value:
+                    dumper.represent_scalar('tag:yaml.org,2002:null',
+                                            ''))
 
         # save completed template in file or STDOUT
         if args.output is not None:
             with open(args.output, 'w') as output_file:
-                output_file.writelines(completed_template)
+                yaml.dumsafe_dump(out_yaml,
+                                  output_file,
+                                  default_flow_style=False,
+                                  allow_unicode=True,
+                                  sort_keys=False)
         else:
-            for line in completed_template:
-                print(line.rstrip())
+            print(yaml.safe_dump(out_yaml,
+                                 default_flow_style=False,
+                                 allow_unicode=True,
+                                 sort_keys=False))
 
     except FileNotFoundError as fnfe:
         # One of the input files was not found

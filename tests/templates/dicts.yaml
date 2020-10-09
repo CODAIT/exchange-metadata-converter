@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and 
 # limitations under the License.
-apiVersion: com.ibm/v1alpha1
-kind: Dataset
-metadata:
-  name: '{{name}}'
-spec:
-  type: 'ARCHIVE'
-  url: '{{repository.url}}'
-  format: '{{repository.mime_type}}'
+apiVersion:                             # not replaced (no value)
+kind: Dataset                           # not replaced (no placeholder)
+dict1: '{{level0_1}}'                   # {key_1: key_1_value}
+dict2: '{{level0_2}}'                   # { key_2: key_2_value, key_3: key_3_value}
+dict3:
+  key_a: '{{level0_3}}'                 # 
+  key_b: '{{level0_4}}'                 # 

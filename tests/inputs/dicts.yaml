@@ -1,0 +1,27 @@
+# ------------------------------------
+# This test input file defines a YAML
+# document containing dictionaries
+# ------------------------------------
+level0_1: 
+  key_1: key_1_value
+level0_2: 
+  key_2: key_2_value
+  key_3: key_3_value
+level0_3: 
+  key_4: key_4_value
+  key_5:
+    key_6: key_6_value
+    key_7: key_7_value
+  key_8: key_8_value
+level0_4: 
+  key_9: key_9_value
+  key_10:
+    key_11: 
+      - key_11_value1
+      - key_11_value2
+    key_12: key_12_value
+    key_13:
+      - key_14: key_14_value
+        key_15: key_15_value
+        key_16: key_16_value
+  key_17: key_17_value
