@@ -68,8 +68,6 @@ class TestLists(unittest.TestCase):
             self.assertIsInstance(out_dict['dict_list_key2']['list_a'], list)
             self.assertTrue(len(out_dict['dict_list_key2']['list_a']) == 3)
 
-            print(out_dict['dict_list_key2']['list_a'])
-
             self.assertEqual(
                 out_dict['dict_list_key2']['list_a'][0]['property1'],
                 'value1a')
