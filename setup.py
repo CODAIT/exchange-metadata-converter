@@ -29,7 +29,7 @@ setup(
   long_description_content_type='text/markdown',
   author='CODAIT',
   author_email='ptitzler@us.ibm.com',
-  url='https://github.com/CODAIT/loremipsum',
+  url='https://github.com/CODAIT/exchange-metadata-converter',
   keywords=['YAML templating engine'],
   install_requires=[
     'pyyaml'
