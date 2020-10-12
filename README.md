@@ -44,7 +44,7 @@ $ python metadata_converter/apply.py my.yaml my.template -o my_completed.templat
 
 ## Programmatic invocation
 
-See example code in [`examples/invoke.py`](examples/invoke.py). 
+See example source code in [examples/](examples/).
 
 ## Templates
 
