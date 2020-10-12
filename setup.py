@@ -22,7 +22,7 @@ with open('README.md') as readme:
 setup(
   name='exchange-metadata-converter',
   packages=find_packages(),
-  version='0.0.1',
+  version='0.0.2',
   license='Apache-2.0',
   description='exchange metadata converters',
   long_description=README,
@@ -32,6 +32,7 @@ setup(
   url='https://github.com/CODAIT/exchange-metadata-converter',
   keywords=['YAML templating engine'],
   install_requires=[
+    'importlib-resources',
     'pyyaml'
   ],
   include_package_data=True,

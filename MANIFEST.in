@@ -1,1 +1,1 @@
-include max_training_framework/setup/config.json
+include templates/*.yaml
