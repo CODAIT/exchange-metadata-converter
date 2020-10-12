@@ -24,7 +24,32 @@ import yaml
 def generate_dlf_yaml(in_yaml):
     """
     Generate DLF-compatible YAML configuration file using
-    "templates/dlf_out" as template.
+    "templates/dlf_out.yaml" as template.
+
+    :param in_yaml: dict representation of a YAML document defining
+    placeholder values in "templates/dlf_out.yaml"
+    :type in_yaml: dict
+    :raises PlaceholderNotFoundError: a {{...}} placeholder referenced
+    in "templates/dlf_out.yaml" was not found
+    :raises ValueError in_yaml is not of type dict
+    :return: DLF-compatible YAML file
+    :rtype: str
+    """
+
+    dlf_yaml_dict = generate_dlf_yaml_dict(in_yaml)
+
+    dlf_yaml = yaml.safe_dump(dlf_yaml_dict,
+                              default_flow_style=False,
+                              allow_unicode=True,
+                              sort_keys=False)
+
+    return dlf_yaml
+
+
+def generate_dlf_yaml_dict(in_yaml):
+    """
+    Generate DLF-compatible YAML configuration using
+    "templates/dlf_out.yaml" as template.
 
     :param in_yaml: dict representation of a YAML document defining
     placeholder values in "templates/dlf_out.yaml"
@@ -45,9 +70,9 @@ def generate_dlf_yaml(in_yaml):
 
     # replace placeholders in in_template_yaml with values from
     # in_placeholder_yaml
-    dlf_yaml = replace(in_yaml, dlf_template_yaml)
+    dlf_yaml_dict = replace(in_yaml, dlf_template_yaml)
 
-    return dlf_yaml
+    return dlf_yaml_dict
 
 
 #
@@ -69,10 +94,14 @@ if __name__ == "__main__":
             placeholder_yaml = yaml.load(source_yaml,
                                          Loader=yaml.FullLoader)
 
-        generated_dlf_yaml = generate_dlf_yaml(placeholder_yaml)
+        generated_dlf_yaml_dict = generate_dlf_yaml(placeholder_yaml)
 
         # print template yamls with replacements in place
-        print(generated_dlf_yaml)
+        print('Generated DLF YAML dict: ')
+        print(generated_dlf_yaml_dict)
+
+        print('Generated DLF YAML file: ')
+        print(generate_dlf_yaml(placeholder_yaml))
 
     except Exception as ex:
         print(ex)

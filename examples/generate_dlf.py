@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 from metadata_converter.generate import generate_dlf_yaml
+from metadata_converter.generate import generate_dlf_yaml_dict
 import sys
 import yaml
 
@@ -38,10 +39,14 @@ if __name__ == "__main__":
 
         # Generate DLF-compatible YAML by replacing the placeholders
         # in  "templates/dlf_out.yaml" with values from placeholder_yaml
-        generated_dlf_yaml = generate_dlf_yaml(placeholder_yaml)
+        generated_dlf_yaml_dict = generate_dlf_yaml_dict(placeholder_yaml)
 
-        # print template YAML with replacements in place
-        print(generated_dlf_yaml)
+        # print DLF-compatible output with replacements in place
+        print('Generated DLF YAML dict: ')
+        print(generated_dlf_yaml_dict)
+
+        print('Generated DLF YAML file: ')
+        print(generate_dlf_yaml(placeholder_yaml))
 
     except Exception as ex:
         print(ex)
