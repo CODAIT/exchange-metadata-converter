@@ -1,4 +1,4 @@
-# Copyright 2019 IBM Corporation 
+# Copyright 2020 IBM Corporation 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License. 
@@ -15,6 +15,8 @@ apiVersion: com.ibm/v1alpha1
 kind: Dataset
 metadata:
   name: '{{name}}'
+  labels:
+    version: '{{version}}'
 spec:
   type: 'ARCHIVE'
   url: '{{repository.url}}'
