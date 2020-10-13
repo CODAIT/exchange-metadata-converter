@@ -14,9 +14,12 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from pathlib import Path
+from ruamel.yaml import YAML
 import glob
 import unittest
-import yaml
+
+yaml = YAML()
 
 #
 # Tests OpenAIHub template (templates/openaihub_out.yaml)
@@ -29,11 +32,7 @@ class TestOAH(unittest.TestCase):
 
         self.template_file = 'templates/openaihub_out.yaml'
 
-        with open(self.template_file, 'r') as template_yaml:
-            self.template_yamls = list(yaml.load_all(template_yaml,
-                                                     Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.template_yamls) == 1)
+        self.template_yamls = yaml.load(Path(self.template_file))
 
     def test_dax_dataset_descriptors(self):
 
@@ -44,16 +43,13 @@ class TestOAH(unittest.TestCase):
 
         error_count = 0
         for descriptor in glob.iglob('dax-data-set-descriptors/*.yaml'):
-            with open(descriptor, 'r') as source_yaml:
-                in_yamls = list(yaml.load_all(source_yaml,
-                                              Loader=yaml.FullLoader))
-                self.assertTrue(len(in_yamls) == 1)
-                try:
-                    replace(in_yamls[0], self.template_yamls[0])
-                except Exception as e:
-                    print('Error prossing {}: {}'
-                          .format(descriptor, str(e)))
-                    error_count = error_count + 1
+            in_yamls = yaml.load(Path(descriptor))
+            try:
+                replace(in_yamls, self.template_yamls)
+            except Exception as e:
+                print('Error prossing {}: {}'
+                      .format(descriptor, str(e)))
+                error_count = error_count + 1
         self.assertEqual(error_count, 0,
                          'Processing of {} descriptors failed'
                          .format(error_count))

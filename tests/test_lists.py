@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from pathlib import Path
+from ruamel.yaml import YAML
 import unittest
-import yaml
+
+yaml = YAML()
 
 
 class TestLists(unittest.TestCase):
@@ -24,34 +27,26 @@ class TestLists(unittest.TestCase):
 
         self.placeholder_file = 'tests/inputs/lists.yaml'
 
-        with open(self.placeholder_file, 'r') as source_yaml:
-            self.in_yamls = list(yaml.load_all(source_yaml,
-                                               Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.in_yamls) == 2)
+        self.in_yamls = yaml.load(Path(self.placeholder_file))
 
         self.template_file = 'tests/templates/lists.yaml'
 
-        with open(self.template_file, 'r') as template_yaml:
-            self.template_yamls = list(yaml.load_all(template_yaml,
-                                                     Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.template_yamls) == 1)
+        self.template_yamls = yaml.load(Path(self.template_file))
 
     def test_lists(self):
 
         try:
-            out_dict = replace(self.in_yamls[1], self.template_yamls[0])
+            out_dict = replace(self.in_yamls, self.template_yamls)
             self.assertTrue(out_dict is not None)
             self.assertTrue(isinstance(out_dict, dict))
             self.assertEqual(out_dict['apiVersion'], None)
             self.assertEqual(out_dict['kind'],
-                             self.template_yamls[0]['kind'])
+                             self.template_yamls['kind'])
             # list of strings
             self.assertIsInstance(out_dict['string_list_key'], list)
             self.assertTrue(len(out_dict['string_list_key']) == 2)
             self.assertSetEqual(set(out_dict['string_list_key']),
-                                set(['item1', self.in_yamls[1]['string_key']]))
+                                set(['item1', self.in_yamls['string_key']]))
 
             # list of dicts (no replacement)
             self.assertIsInstance(out_dict['dict_list_key'], list)

@@ -15,8 +15,11 @@
 #
 from metadata_converter.generate import generate_oah_yaml
 from metadata_converter.generate import generate_oah_yaml_dict
+from pathlib import Path
+from ruamel.yaml import YAML
 import sys
-import yaml
+
+yaml = YAML()
 
 #
 # This example illustrates how to invoke the exchange metadata converter
@@ -33,9 +36,8 @@ if __name__ == "__main__":
                           '/path/to/placeholder/yaml'))
             sys.exit(1)
 
-        with open(sys.argv[1], 'r') as source_yaml:
-            placeholder_yaml = yaml.load(source_yaml,
-                                         Loader=yaml.FullLoader)
+        # load placeholder YAML
+        placeholder_yaml = yaml.load(Path(sys.argv[1]))
 
         # Generate OpenAIHub-compatible YAML by replacing the placeholders
         # in  "templates/openaihub_out.yaml" with values from placeholder_yaml

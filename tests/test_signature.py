@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from pathlib import Path
+from ruamel.yaml import YAML
 import unittest
-import yaml
+
+yaml = YAML()
 
 
 class TestSignature(unittest.TestCase):
@@ -24,19 +27,11 @@ class TestSignature(unittest.TestCase):
 
         self.placeholder_file = 'tests/inputs/scalars.yaml'
 
-        with open(self.placeholder_file, 'r') as source_yaml:
-            self.in_yamls = list(yaml.load_all(source_yaml,
-                                               Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.in_yamls) == 1)
+        self.in_yamls = yaml.load(Path(self.placeholder_file))
 
         self.template_file = 'tests/templates/scalars.yaml'
 
-        with open(self.template_file, 'r') as template_yaml:
-            self.template_yamls = list(yaml.load_all(template_yaml,
-                                                     Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.template_yamls) == 1)
+        self.template_yamls = yaml.load(Path(self.template_file))
 
     def test_none_parms(self):
 
