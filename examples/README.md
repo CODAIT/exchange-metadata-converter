@@ -5,3 +5,7 @@ Bring your own placeholder file and template YAML. See example code in [`invoke.
 ### Generate DLF-compatible YAML
 
 Generate a DLF-compatible YAML file. See example code in [`generate_dlf.py`](generate_dlf.py).
+
+### Generate OpenAIHub-compatible YAML
+
+Generate a OpenAIHub-compatible YAML file. See example code in [`generate_openaihub.py`](generate_openaihub.py).
