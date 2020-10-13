@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from pathlib import Path
 from ruamel.yaml import YAML
 import sys
 
@@ -39,10 +40,10 @@ if __name__ == "__main__":
             sys.exit(1)
 
         # load the placeholder YAML
-        in_placeholder_yaml = yaml.load(sys.argv[1])
+        in_placeholder_yaml = yaml.load(Path(sys.argv[1]))
 
         # load the template YAML
-        in_template_yaml = yaml.load(sys.argv[2])
+        in_template_yaml = yaml.load(Path(sys.argv[2]))
 
         # replace placeholders in in_template_yaml with values from
         # in_placeholder_yaml
