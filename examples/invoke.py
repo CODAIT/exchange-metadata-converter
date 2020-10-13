@@ -20,7 +20,7 @@ import yaml
 
 #
 # This example illustrates how to invoke the exchange metadata converter
-# programatically.
+# programmatically.
 # Required parameters:
 # /path/to/placeholder/yaml see examples in dax-data-set-descriptors/
 # /path/to/template/yaml see examples in templates/

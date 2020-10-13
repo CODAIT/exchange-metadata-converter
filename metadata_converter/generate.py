@@ -77,7 +77,7 @@ def generate_dlf_yaml_dict(in_yaml):
 
 #
 # This example illustrates how to invoke the exchange metadata converter
-# programatically, using the DLF template
+# programmatically, using the DLF template
 # Required parameters:
 # /path/to/placeholder/yaml see examples in dax-data-set-descriptors/
 if __name__ == "__main__":

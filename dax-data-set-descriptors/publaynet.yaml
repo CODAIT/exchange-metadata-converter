@@ -10,7 +10,7 @@ format:
   mime_type: image/png
 domain: Computer Vision
 
-# Information about the entity that makes the data set avaialable
+# Information about the entity that makes the data set available
 provider:
   name: Data Asset eXchange
   url: https://developer.ibm.com/exchanges/data/all/publaynet/
