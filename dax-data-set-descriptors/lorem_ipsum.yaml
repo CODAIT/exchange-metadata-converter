@@ -11,7 +11,7 @@ format:
     url: https://en.wikipedia.org/wiki/Comma-separated_values
 domain: Lorem Ipsum domain          # application domain, e.g. Natural Language Processing
 
-# Information about the entity that makes the data set avaialable
+# Information about the entity that makes the data set available
 provider:                           # Information about the repository that makes the data set available 
   name: Data Asset eXchange         # Repository provider name
   url: https://.../lorem-ipsum/     # Repository provider URL (preferably data set specific)
