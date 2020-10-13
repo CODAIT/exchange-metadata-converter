@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from pathlib import Path
+from ruamel.yaml import YAML
 import unittest
-import yaml
+
+yaml = YAML()
 
 
 class TestDicts(unittest.TestCase):
@@ -24,37 +27,29 @@ class TestDicts(unittest.TestCase):
 
         self.placeholder_file = 'tests/inputs/dicts.yaml'
 
-        with open(self.placeholder_file, 'r') as source_yaml:
-            self.in_yamls = list(yaml.load_all(source_yaml,
-                                               Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.in_yamls) == 1)
+        self.in_yamls = yaml.load(Path(self.placeholder_file))
 
         self.template_file = 'tests/templates/dicts.yaml'
 
-        with open(self.template_file, 'r') as template_yaml:
-            self.template_yamls = list(yaml.load_all(template_yaml,
-                                                     Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.template_yamls) == 1)
+        self.template_yamls = yaml.load(Path(self.template_file))
 
     def test_dicts(self):
 
         try:
-            out_dict = replace(self.in_yamls[0], self.template_yamls[0])
+            out_dict = replace(self.in_yamls, self.template_yamls)
             self.assertTrue(out_dict is not None)
             self.assertTrue(isinstance(out_dict, dict))
             self.assertEqual(out_dict['apiVersion'], None)
             self.assertEqual(out_dict['kind'],
-                             self.template_yamls[0]['kind'])
+                             self.template_yamls['kind'])
             self.assertEqual(out_dict['dict1'],
-                             self.in_yamls[0]['level0_1'])
+                             self.in_yamls['level0_1'])
             self.assertEqual(out_dict['dict2'],
-                             self.in_yamls[0]['level0_2'])
+                             self.in_yamls['level0_2'])
             self.assertEqual(out_dict['dict3']['key_a'],
-                             self.in_yamls[0]['level0_3'])
+                             self.in_yamls['level0_3'])
             self.assertEqual(out_dict['dict3']['key_b'],
-                             self.in_yamls[0]['level0_4'])
+                             self.in_yamls['level0_4'])
         except Exception as e:
             self.assertTrue(False, e)
 

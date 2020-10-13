@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from ruamel.yaml import YAML
 import sys
-import yaml
+
+yaml = YAML()
+yaml.default_flow_style = False
 
 
 #
@@ -36,21 +39,17 @@ if __name__ == "__main__":
             sys.exit(1)
 
         # load the placeholder YAML
-        with open(sys.argv[1], 'r') as source_yaml:
-            in_placeholder_yaml = yaml.load(source_yaml,
-                                            Loader=yaml.FullLoader)
+        in_placeholder_yaml = yaml.load(sys.argv[1])
 
         # load the template YAML
-        with open(sys.argv[2], 'r') as source_yaml:
-            in_template_yaml = yaml.load(source_yaml,
-                                         Loader=yaml.FullLoader)
+        in_template_yaml = yaml.load(sys.argv[2])
 
         # replace placeholders in in_template_yaml with values from
         # in_placeholder_yaml
         out_template_yaml = replace(in_placeholder_yaml, in_template_yaml)
 
         # print template yamls with replacements in place
-        print(out_template_yaml)
+        yaml.dump(out_template_yaml, sys.stdout)
 
     except Exception as ex:
         print(ex)

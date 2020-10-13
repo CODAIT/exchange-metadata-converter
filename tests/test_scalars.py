@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 from metadata_converter.apply import replace
+from pathlib import Path
+from ruamel.yaml import YAML
 import unittest
-import yaml
+
+yaml = YAML()
 
 
 class TestScalars(unittest.TestCase):
@@ -24,40 +27,32 @@ class TestScalars(unittest.TestCase):
 
         self.placeholder_file = 'tests/inputs/scalars.yaml'
 
-        with open(self.placeholder_file, 'r') as source_yaml:
-            self.in_yamls = list(yaml.load_all(source_yaml,
-                                               Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.in_yamls) == 1)
+        self.in_yamls = yaml.load(Path(self.placeholder_file))
 
         self.template_file = 'tests/templates/scalars.yaml'
 
-        with open(self.template_file, 'r') as template_yaml:
-            self.template_yamls = list(yaml.load_all(template_yaml,
-                                                     Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.template_yamls) == 1)
+        self.template_yamls = yaml.load(Path(self.template_file))
 
     def test_scalars(self):
 
         try:
-            out_dict = replace(self.in_yamls[0], self.template_yamls[0])
+            out_dict = replace(self.in_yamls, self.template_yamls)
             self.assertTrue(out_dict is not None)
             self.assertTrue(isinstance(out_dict, dict))
             self.assertEqual(out_dict['apiVersion'], None)
             self.assertEqual(out_dict['kind'],
-                             self.template_yamls[0]['kind'])
+                             self.template_yamls['kind'])
             self.assertEqual(out_dict['metadata'],
-                             self.in_yamls[0]['level0_1'])
+                             self.in_yamls['level0_1'])
             self.assertEqual(out_dict['basic'],
-                             self.template_yamls[0]['basic'])
+                             self.template_yamls['basic'])
             self.assertEqual(out_dict['anton'], None)
             self.assertEqual(out_dict['delta'],
-                             self.in_yamls[0]['level0_3']['level1_1'])
+                             self.in_yamls['level0_3']['level1_1'])
             self.assertEqual(out_dict['caesar'],
-                             self.template_yamls[0]['caesar'])
+                             self.template_yamls['caesar'])
             self.assertEqual(out_dict['gamma'],
-                             self.in_yamls[0]
+                             self.in_yamls
                              ['level0_3']['level1_2']['level2_1'])
         except Exception as e:
             self.assertTrue(False, e)

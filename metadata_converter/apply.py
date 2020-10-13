@@ -14,8 +14,11 @@
 # limitations under the License.
 #
 from argparse import ArgumentParser
+from ruamel.yaml import YAML
 import re
-import yaml
+import sys
+
+yaml = YAML()
 
 
 # Raised if template contains a placeholder
@@ -134,46 +137,26 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', default=None,
                         help='Output file name. If not specified '
                               'output is sent to STDOUT.')
-    parser.add_argument('--yaml_dump_null_as_empty',
-                        action='store_true',
-                        help='If specified, null values are dumped '
-                             'as empty string, e.g. "mykey: null" is '
-                             'dumped as "mykey: "')
     args = parser.parse_args()
 
     try:
         # load the input YAML
-        with open(args.input_yaml, 'r') as source_yaml:
-            in_yaml = yaml.load(source_yaml, Loader=yaml.FullLoader)
+        in_yaml = yaml.load(args.input_yaml)
 
-        # load template
-        with open(args.template, 'r') as template_file:
-            in_template = yaml.load(template_file, Loader=yaml.FullLoader)
+        # load template YAML
+        in_template = yaml.load(args.template)
 
         # replace placeholders in template
         out_yaml = replace(in_yaml, in_template)
 
-        if args.yaml_dump_null_as_empty:
-            # dump NoneType as an empty string `` instead of `null`
-            yaml.SafeDumper.add_representer(
-                type(None),
-                lambda dumper, value:
-                    dumper.represent_scalar('tag:yaml.org,2002:null',
-                                            ''))
+        yaml.indent(mapping=2, sequence=4, offset=2)
 
         # save completed template in file or STDOUT
         if args.output is not None:
             with open(args.output, 'w') as output_file:
-                yaml.dumsafe_dump(out_yaml,
-                                  output_file,
-                                  default_flow_style=False,
-                                  allow_unicode=True,
-                                  sort_keys=False)
+                yaml.dump(out_yaml, output_file)
         else:
-            print(yaml.safe_dump(out_yaml,
-                                 default_flow_style=False,
-                                 allow_unicode=True,
-                                 sort_keys=False))
+            yaml.dump(out_yaml, sys.stdout)
 
     except FileNotFoundError as fnfe:
         # One of the input files was not found

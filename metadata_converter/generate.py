@@ -16,9 +16,14 @@
 
 from importlib_resources import files
 from metadata_converter.apply import replace
+from pathlib import Path
+from ruamel.yaml import YAML
+import io
 import sys
 import templates
-import yaml
+
+yaml = YAML()
+yaml.default_flow_style = False
 
 
 def generate_dlf_yaml(in_yaml):
@@ -38,12 +43,10 @@ def generate_dlf_yaml(in_yaml):
 
     dlf_yaml_dict = generate_dlf_yaml_dict(in_yaml)
 
-    dlf_yaml = yaml.safe_dump(dlf_yaml_dict,
-                              default_flow_style=False,
-                              allow_unicode=True,
-                              sort_keys=False)
+    buf = io.StringIO()
+    yaml.dump(dlf_yaml_dict, buf)
 
-    return dlf_yaml
+    return buf.getvalue()
 
 
 def generate_dlf_yaml_dict(in_yaml):
@@ -64,9 +67,7 @@ def generate_dlf_yaml_dict(in_yaml):
     dlf_yaml = files(templates).joinpath('dlf_out.yaml')
 
     # load the template YAML
-    with open(dlf_yaml, 'r') as template_yaml:
-        dlf_template_yaml = yaml.load(template_yaml,
-                                      Loader=yaml.FullLoader)
+    dlf_template_yaml = yaml.load(dlf_yaml)
 
     # replace placeholders in in_template_yaml with values from
     # in_placeholder_yaml
@@ -92,12 +93,10 @@ def generate_oah_yaml(in_yaml):
 
     oah_yaml_dict = generate_oah_yaml_dict(in_yaml)
 
-    oah_yaml = yaml.safe_dump(oah_yaml_dict,
-                              default_flow_style=False,
-                              allow_unicode=True,
-                              sort_keys=False)
+    buf = io.StringIO()
+    yaml.dump(oah_yaml_dict, buf)
 
-    return oah_yaml
+    return buf.getvalue()
 
 
 def generate_oah_yaml_dict(in_yaml):
@@ -117,10 +116,7 @@ def generate_oah_yaml_dict(in_yaml):
 
     oah_yaml = files(templates).joinpath('openaihub_out.yaml')
 
-    # load the template YAML
-    with open(oah_yaml, 'r') as template_yaml:
-        oah_template_yaml = yaml.load(template_yaml,
-                                      Loader=yaml.FullLoader)
+    oah_template_yaml = yaml.load(oah_yaml)
 
     # replace placeholders in in_template_yaml with values from
     # in_placeholder_yaml
@@ -144,9 +140,7 @@ if __name__ == "__main__":
                           '/path/to/placeholder/yaml'))
             sys.exit(1)
 
-        with open(sys.argv[1], 'r') as source_yaml:
-            placeholder_yaml = yaml.load(source_yaml,
-                                         Loader=yaml.FullLoader)
+        placeholder_yaml = yaml.load(Path(sys.argv[1]))
 
         # print template yamls with replacements in place
         print('Generated DLF YAML dict: \n{}'
@@ -162,4 +156,4 @@ if __name__ == "__main__":
               .format(generate_oah_yaml(placeholder_yaml)))
 
     except Exception as ex:
-        print(ex)
+        raise (ex)
