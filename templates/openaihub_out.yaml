@@ -14,8 +14,23 @@
 apiVersion: com.ibm/v1alpha1
 kind: Dataset
 metadata:
-  name: {{name}}
+  name: '{{name}}'
+  labels:
+    id: '{{id}}'
+    description: '{{description}}'
+    version: '{{version}}'
+    created: '{{created}}'
+    updated: '{{updated}}'
+    format: '{{format}}'
+    domain: '{{domain}}'
+    provider: '{{provider}}'
+    repository: '{{repository}}'
+    license: '{{license}}'
+    content:
+    source: '{{source}}'
+    seo_tags: '{{seo_tags}}'
+    related_assets: '{{related_assets}}'
 spec:
   type: "ARCHIVE"
-  url: {{repository.url}}
-  format: {{repository.mime_type}}
+  url: '{{repository.url}}'
+  format: '{{repository.mime_type}}'

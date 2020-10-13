@@ -75,9 +75,63 @@ def generate_dlf_yaml_dict(in_yaml):
     return dlf_yaml_dict
 
 
+def generate_oah_yaml(in_yaml):
+    """
+    Generate OpenAIHub-compatible YAML configuration file using
+    "templates/openaihub_out.yaml" as template.
+
+    :param in_yaml: dict representation of a YAML document defining
+    placeholder values in "templates/openaihub_out.yaml"
+    :type in_yaml: dict
+    :raises PlaceholderNotFoundError: a {{...}} placeholder referenced
+    in "templates/openaihub_out.yaml" was not found
+    :raises ValueError in_yaml is not of type dict
+    :return: OpenAIHub-compatible YAML file
+    :rtype: str
+    """
+
+    oah_yaml_dict = generate_oah_yaml_dict(in_yaml)
+
+    oah_yaml = yaml.safe_dump(oah_yaml_dict,
+                              default_flow_style=False,
+                              allow_unicode=True,
+                              sort_keys=False)
+
+    return oah_yaml
+
+
+def generate_oah_yaml_dict(in_yaml):
+    """
+    Generate OpenAIHub-compatible YAML configuration using
+    "templates/openaihub_out.yaml" as template.
+
+    :param in_yaml: dict representation of a YAML document defining
+    placeholder values in "templates/openaihub_out.yaml"
+    :type in_yaml: dict
+    :raises PlaceholderNotFoundError: a {{...}} placeholder referenced
+    in "templates/openaihub_out.yaml" was not found
+    :raises ValueError in_yaml is not of type dict
+    :return: OpenAIHub-compatible YAML file
+    :rtype: dict
+    """
+
+    oah_yaml = files(templates).joinpath('openaihub_out.yaml')
+
+    # load the template YAML
+    with open(oah_yaml, 'r') as template_yaml:
+        oah_template_yaml = yaml.load(template_yaml,
+                                      Loader=yaml.FullLoader)
+
+    # replace placeholders in in_template_yaml with values from
+    # in_placeholder_yaml
+    oah_yaml_dict = replace(in_yaml, oah_template_yaml)
+
+    return oah_yaml_dict
+
+
 #
 # This example illustrates how to invoke the exchange metadata converter
-# programmatically, using the DLF template
+# programmatically, using the DLF and OpenAIHub templates
 # Required parameters:
 # /path/to/placeholder/yaml see examples in dax-data-set-descriptors/
 if __name__ == "__main__":
@@ -94,14 +148,18 @@ if __name__ == "__main__":
             placeholder_yaml = yaml.load(source_yaml,
                                          Loader=yaml.FullLoader)
 
-        generated_dlf_yaml_dict = generate_dlf_yaml(placeholder_yaml)
-
         # print template yamls with replacements in place
-        print('Generated DLF YAML dict: ')
-        print(generated_dlf_yaml_dict)
+        print('Generated DLF YAML dict: \n{}'
+              .format(generate_dlf_yaml_dict(placeholder_yaml)))
 
-        print('Generated DLF YAML file: ')
-        print(generate_dlf_yaml(placeholder_yaml))
+        print('Generated DLF YAML: \n{}'
+              .format(generate_dlf_yaml(placeholder_yaml)))
+
+        print('Generated OpenAIHub YAML dict: \n{}'
+              .format(generate_oah_yaml_dict(placeholder_yaml)))
+
+        print('Generated OpenAIHub YAML: \n{}'
+              .format(generate_oah_yaml(placeholder_yaml)))
 
     except Exception as ex:
         print(ex)

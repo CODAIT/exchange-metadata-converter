@@ -19,23 +19,15 @@ import unittest
 import yaml
 
 #
-# Tests DLF template (templates/dlf_out.yaml)
+# Tests OpenAIHub template (templates/openaihub_out.yaml)
 #
 
 
-class TestDLF(unittest.TestCase):
+class TestOAH(unittest.TestCase):
 
     def setUp(self):
 
-        self.placeholder_file = 'dax-data-set-descriptors/lorem_ipsum.yaml'
-
-        with open(self.placeholder_file, 'r') as source_yaml:
-            self.in_yamls = list(yaml.load_all(source_yaml,
-                                               Loader=yaml.FullLoader))
-
-        self.assertTrue(len(self.in_yamls) == 1)
-
-        self.template_file = 'templates/dlf_out.yaml'
+        self.template_file = 'templates/openaihub_out.yaml'
 
         with open(self.template_file, 'r') as template_yaml:
             self.template_yamls = list(yaml.load_all(template_yaml,
@@ -43,33 +35,13 @@ class TestDLF(unittest.TestCase):
 
         self.assertTrue(len(self.template_yamls) == 1)
 
-    def test_dtest_dlf(self):
-
-        try:
-            out_dict = replace(self.in_yamls[0], self.template_yamls[0])
-            self.assertTrue(out_dict is not None)
-            self.assertTrue(isinstance(out_dict, dict))
-            self.assertEqual(out_dict['apiVersion'], 'com.ibm/v1alpha1')
-            self.assertEqual(out_dict['kind'], 'Dataset')
-            self.assertEqual(out_dict['metadata']['name'],
-                             self.in_yamls[0]['name'])
-            self.assertEqual(out_dict['metadata']['labels']['version'],
-                             self.in_yamls[0]['version'])
-            self.assertEqual(out_dict['spec']['type'],
-                             'ARCHIVE')
-            self.assertEqual(out_dict['spec']['url'],
-                             self.in_yamls[0]['repository']['url'])
-            self.assertEqual(out_dict['spec']['format'],
-                             self.in_yamls[0]['repository']['mime_type'])
-        except Exception as e:
-            self.assertTrue(False, e)
-
     def test_dax_dataset_descriptors(self):
 
         # Verify that the DAX data set descriptors in dax-data-set-descriptors
         # don't raise any exceptions during processing. For example, an
-        # exception is raised if the DLF YAML template contains a placeholder
-        # that is not defined.
+        # exception is raised if the OpenAIHub YAML template contains a
+        # placeholder that is not defined.
+
         error_count = 0
         for descriptor in glob.iglob('dax-data-set-descriptors/*.yaml'):
             with open(descriptor, 'r') as source_yaml:
