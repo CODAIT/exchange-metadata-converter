@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 from argparse import ArgumentParser
+from pathlib import Path
 from ruamel.yaml import YAML
 import re
 import sys
@@ -141,10 +142,10 @@ if __name__ == "__main__":
 
     try:
         # load the input YAML
-        in_yaml = yaml.load(args.input_yaml)
+        in_yaml = yaml.load(Path(args.input_yaml))
 
         # load template YAML
-        in_template = yaml.load(args.template)
+        in_template = yaml.load(Path(args.template))
 
         # replace placeholders in template
         out_yaml = replace(in_yaml, in_template)

@@ -22,7 +22,7 @@ with open('README.md') as readme:
 setup(
   name='exchange-metadata-converter',
   packages=find_packages(),
-  version='0.0.5',
+  version='0.0.6',
   license='Apache-2.0',
   description='exchange metadata converters',
   long_description=README,
