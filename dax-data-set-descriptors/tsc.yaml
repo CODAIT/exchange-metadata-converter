@@ -5,8 +5,8 @@ version: 1.0.1
 created: 2020-03-17
 updated: 2020-03-17
 format:
-  type: WAV
-  mime_type: audio/wav
+  - type: WAV
+    url: https://en.wikipedia.org/wiki/WAV
 domain: Audio
 
 # Information about the entity that makes the data set avaialable

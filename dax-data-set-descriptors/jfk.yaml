@@ -7,8 +7,8 @@ created: 2019-07-19
 updated: 2020-07-19
 # TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
-  type: CSV
-  mime_type: text/csv
+  - type: CSV
+    url: https://en.wikipedia.org/wiki/Comma-separated_values
 domain: Time Series
 
 # Information about the entity that makes the data set avaialable

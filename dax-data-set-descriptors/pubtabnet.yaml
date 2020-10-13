@@ -4,10 +4,11 @@ description: PubTabNet is a large dataset for image-based table recognition, con
 version: 2.0.0
 created: 2020-07-20
 updated: 2020-07-20
-# TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
-  type: PNG
-  mime_type: image/png
+  - type: PNG
+    url: https://en.wikipedia.org/wiki/Portable_Network_Graphics
+  - type: JSON
+    url: https://json.org/
 domain: Computer Vision
 
 # Information about the entity that makes the data set avaialable
