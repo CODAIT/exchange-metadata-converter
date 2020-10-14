@@ -16,6 +16,8 @@
 from argparse import ArgumentParser
 from pathlib import Path
 from ruamel.yaml import YAML
+from ruamel.yaml.tokens import CommentToken
+from ruamel.yaml.comments import CommentedMap
 import re
 import sys
 
@@ -48,11 +50,70 @@ def replace(yaml_dict, template_dict):
     :rtype: dict
     """
 
+    def get_metadata(template_dict, key):
+        # If d is an instance of ruamel.yaml.comments.CommentedMap
+        # this method returns the metadata associated with the
+        # provided property key
+
+        if not isinstance(template_dict, CommentedMap):
+            return None
+
+        d = template_dict
+
+        metadata = {
+            'comment': None,
+            'comment_text': None,
+            'annotations': set()
+        }
+        # raw comment, e.g. "# @optional another comment\n"
+        if key in d.ca.items:
+            if (len(d.ca.items.get(key)) > 2) and \
+               isinstance(d.ca.items.get(key)[2], CommentToken):
+                metadata['comment'] = d.ca.items.get(key)[2].value
+        # comment text, e.g. "another comment"
+        metadata['comment_text'] = metadata['comment']
+        # extract embedded annotations, e.g. "@optional"
+        if metadata['comment'] is not None:
+            # Extract @... annotations
+            for match in re.finditer('@([a-zA-Z]+)',
+                                     metadata['comment'],
+                                     re.I):
+                metadata['annotations'].add(match.group(1))
+            # Remove noise from the comment, such as annotations
+            # comment characters and whitespace characters
+            #  - Remove annotations
+            for annotation in metadata['annotations']:
+                metadata['comment_text'] =\
+                    metadata['comment_text'].replace('@{}'.format(annotation),
+                                                     '')
+            #  - Remove '#' and whitespaces from the beginning of each line
+            #    This needs to be done twice to handle empty comments properly.
+            metadata['comment_text'] = re.sub(r'^\s*#\s*',
+                                              '',
+                                              metadata['comment_text'],
+                                              flags=re.MULTILINE)
+            metadata['comment_text'] = re.sub(r'^\s*#\s*',
+                                              '',
+                                              metadata['comment_text'],
+                                              flags=re.MULTILINE)
+            #  - remove whitespace chars from the end of each line
+            metadata['comment_text'] = re.sub(r'\s*$',
+                                              '',
+                                              metadata['comment_text'],
+                                              flags=re.MULTILINE)
+
+            #  - remove newline from the end
+            metadata['comment_text'] = metadata['comment_text'].strip()
+
+            if len(metadata['comment_text']) == 0:
+                metadata['comment_text'] = None
+        return metadata
+
     # pre-compile the {{...}} placeholder search expression
     # outside `do_replace` to avoid doing it multiple times
     p = re.compile(r'{{([\w\.]+)}}', re.VERBOSE)
 
-    def process_string(yaml_dict, str):
+    def process_string(yaml_dict, str, metadata):
         # determine whether {{...}} placeholder
         # replacement is required
         r = p.search(str)
@@ -63,19 +124,25 @@ def replace(yaml_dict, template_dict):
             for property in r.group(1).split('.'):
                 root = root.get(property)
                 if root is None:
-                    raise PlaceholderNotFoundError(r.group(1))
+                    # check annotations to determine appropriate
+                    # behavior
+                    if metadata is not None and\
+                       'optional' in metadata['annotations']:
+                        return None
+                    else:
+                        raise PlaceholderNotFoundError(r.group(1))
             return root
 
-    def process_list(yaml_dict, list_in):
+    def process_list(yaml_dict, list_in, metadata):
         list_out = []
         for v in list_in:
             # if v is a string process it
             if(isinstance(v, str)):
-                list_out.append(process_string(yaml_dict, v))
+                list_out.append(process_string(yaml_dict, v, metadata))
             elif(isinstance(v, dict)):
                 list_out.append(do_replace(yaml_dict, v))
             elif(isinstance(v, list)):
-                list_out.append(process_list(yaml_dict, v))
+                list_out.append(process_list(yaml_dict, v, metadata))
             else:
                 raise NotImplementedError(
                         'Support for properties of type {} in lists '
@@ -103,18 +170,23 @@ def replace(yaml_dict, template_dict):
         for key in template_dict.keys():
             val = template_dict[key]
             # print('Key: {} Value: {} Type: {}'.format(key, val, type(val)))
+            metadata = get_metadata(template_dict, key)
             if val is None:
                 # NoneType - no value
                 template_out[key] = None
             elif isinstance(val, str):
                 # process string
-                template_out[key] = process_string(yaml_dict, val)
+                template_out[key] = process_string(yaml_dict,
+                                                   val,
+                                                   metadata)
             elif isinstance(val, dict):
                 # process the dictionary recursively
                 template_out[key] = do_replace(yaml_dict, val)
             elif isinstance(val, list):
                 # process each list item
-                template_out[key] = process_list(yaml_dict, val)
+                template_out[key] = process_list(yaml_dict,
+                                                 val,
+                                                 metadata)
             else:
                 raise NotImplementedError(
                         'Support for properties of type {} is not implemented.'

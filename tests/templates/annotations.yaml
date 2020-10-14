@@ -1,0 +1,38 @@
+# test level-0 properties; each one is annotated with
+# <at>optional and should therefore not raise an error
+property1: '{{noprop1value}}' # @optional
+property2: '{{noprop2value}}' # comment @optional
+property3: '{{noprop3value}}' # more comments @optional
+property4: '{{noprop4value}}' # more @optional comments
+property5: '{{noprop5value}}' # more @bogus comments @optional
+property6: '{{noprop6value}}' # more 
+                              # @bogus comments
+                              #  
+                              # @optional
+property7:
+  property8: '{{noprop8value}}' # property8 is
+                                #  
+                                # an @optional property
+                                # we are @very @very @lucky
+property9:
+  property10:
+    property11: '{{noprop11value}}'  # this @optional property
+                                     # is @fine
+property12:
+  - property12a: '{{hey.we_are_a_match}}'   # @optional does not apply
+    property12b: '{{noprop12bvalue}}' # sweet, it's @optional
+    property12c: a_constant!
+---
+property1: '{{noprop1value}}' #
+---
+property1: '{{noprop1value}}' # just a comment
+---
+property1: '{{noprop1value}}' # @notarecognizedannotation
+---
+property1: '{{noprop1value}}' # more
+                              # is not always @better
+                              #
+---
+property1:                          # @optional does not apply
+  property1a: '{{noprop1avalue}}'   # because we fail here
+
