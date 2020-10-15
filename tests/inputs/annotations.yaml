@@ -1,0 +1,6 @@
+# This YAML document does not define the following properties:
+# noprop1value, noprop2value, noprop3value, noprop3value,
+# noprop4value, noprop5value, noprop6value
+unused_property: True
+hey:
+  we_are_a_match: 'Then let us pair up!'
