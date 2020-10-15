@@ -14,14 +14,22 @@ property7:
                                 #  
                                 # an @optional property
                                 # we are @very @very @lucky
-property9:
+property9:                           # annotations work in dicts
   property10:
     property11: '{{noprop11value}}'  # this @optional property
                                      # is @fine
-property12:
+property12:                           # annotations work in lists
   - property12a: '{{hey.we_are_a_match}}'   # @optional does not apply
     property12b: '{{noprop12bvalue}}' # sweet, it's @optional
     property12c: a_constant!
+property13:                             # annotations are case insensitive
+  property14: 
+    property15:
+      property16a: '{{noprop16avalue}}' # @OPTIONAL
+      property16b: '{{noprop16bvalue}}' # an @Optional property
+      property16c: '{{noprop16cvalue}}' # another @OptioNAl property
+    property17:  all is good            # Nothing @opTioNAL here
+    property18: '{{hey.we_are_a_match}}'# nothing @OPTIONal here either
 ---
 property1: '{{noprop1value}}' #
 ---

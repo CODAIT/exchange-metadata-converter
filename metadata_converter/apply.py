@@ -78,7 +78,7 @@ def replace(yaml_dict, template_dict):
             for match in re.finditer('@([a-zA-Z]+)',
                                      metadata['comment'],
                                      re.I):
-                metadata['annotations'].add(match.group(1))
+                metadata['annotations'].add(match.group(1).lower())
             # Remove noise from the comment, such as annotations
             # comment characters and whitespace characters
             #  - Remove annotations

@@ -63,6 +63,22 @@ class TestAnnotations(unittest.TestCase):
             self.assertEqual(
                 self.template_yamls[0]['property12'][0]['property12c'],
                 out_dict['property12'][0]['property12c'])
+            self.assertIsNone(
+                out_dict['property13']['property14']
+                        ['property15']['property16a'])
+            self.assertIsNone(
+                out_dict['property13']['property14']
+                        ['property15']['property16b'])
+            self.assertIsNone(
+                out_dict['property13']['property14']
+                        ['property15']['property16c'])
+            self.assertEqual(out_dict['property13']
+                             ['property14']['property17'],
+                             self.template_yamls[0]['property13']['property14']
+                             ['property17'])
+            self.assertEqual(out_dict['property13']
+                             ['property14']['property18'],
+                             self.in_yamls['hey']['we_are_a_match'])
         except Exception as e:
             self.assertTrue(False, e)
 
