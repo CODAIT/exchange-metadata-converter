@@ -2,16 +2,14 @@ id: lorem-ipsum-data-set            # Unique data set id (required)
 name: Lorem ipsum data set          # User friendly data set name (required)
 description: Lorem ipsum            # Data set description (required)
 version: 1.0                        # Data set version (required, semver format x.y[.z])
-# TBD use timestamp for better accuracy and timezone support
 created: 2019-07-16                 # Data set creation date (ISO-8601 formatted)
 updated: 2020-08-11                 # Last updated date (ISO-8601 formatted)
-# TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
-  type: CSV                         # Data set file format (user friendly)
-  mime_type: text/csv               # Data set MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
+  - type: CSV                         # Data set file format (user friendly)
+    url: https://en.wikipedia.org/wiki/Comma-separated_values
 domain: Lorem Ipsum domain          # application domain, e.g. Natural Language Processing
 
-# Information about the entity that makes the data set avaialable
+# Information about the entity that makes the data set available
 provider:                           # Information about the repository that makes the data set available 
   name: Data Asset eXchange         # Repository provider name
   url: https://.../lorem-ipsum/     # Repository provider URL (preferably data set specific)

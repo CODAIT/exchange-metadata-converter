@@ -7,11 +7,11 @@ created: 2019-07-19
 updated: 2020-07-19
 # TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
-  type: CSV
-  mime_type: text/csv
+  - type: CSV
+    url: https://en.wikipedia.org/wiki/Comma-separated_values
 domain: Time Series
 
-# Information about the entity that makes the data set avaialable
+# Information about the entity that makes the data set available
 provider:
   name: Data Asset eXchange
   url: https://developer.ibm.com/exchanges/data/all/jfk-weather-data/

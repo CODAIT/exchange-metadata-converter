@@ -22,17 +22,18 @@ with open('README.md') as readme:
 setup(
   name='exchange-metadata-converter',
   packages=find_packages(),
-  version='0.0.1',
+  version='0.0.7',
   license='Apache-2.0',
   description='exchange metadata converters',
   long_description=README,
   long_description_content_type='text/markdown',
   author='CODAIT',
   author_email='ptitzler@us.ibm.com',
-  url='https://github.com/CODAIT/loremipsum',
+  url='https://github.com/CODAIT/exchange-metadata-converter',
   keywords=['YAML templating engine'],
   install_requires=[
-    'pyyaml'
+    'importlib-resources',
+    'ruamel.yaml'
   ],
   include_package_data=True,
   classifiers=[

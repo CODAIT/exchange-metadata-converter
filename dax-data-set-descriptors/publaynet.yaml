@@ -4,13 +4,14 @@ description: PubLayNet is a large dataset of document images from PubMed Central
 version: 1.0.0
 created: 2019-08-07
 updated: 2019-08-07
-# TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
-  type: PNG
-  mime_type: image/png
+  - type: JPG
+    url: https://en.wikipedia.org/wiki/JPEG
+  - type: JSON
+    url: https://json.org/
 domain: Computer Vision
 
-# Information about the entity that makes the data set avaialable
+# Information about the entity that makes the data set available
 provider:
   name: Data Asset eXchange
   url: https://developer.ibm.com/exchanges/data/all/publaynet/

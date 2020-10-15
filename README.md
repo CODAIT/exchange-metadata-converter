@@ -42,6 +42,10 @@ Replace `{{...}}` placeholders in `my.template` with values from `my.yaml`. The 
 $ python metadata_converter/apply.py my.yaml my.template -o my_completed.template
 ```
 
+## Programmatic invocation
+
+See example source code in [examples/](/examples).
+
 ## Templates
 
 Example template files for DLF and OpenAIHub can be found in the [templates/](/templates) directory.

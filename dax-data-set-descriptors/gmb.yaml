@@ -5,13 +5,12 @@ version: 1.0.2
 # TBD use timestamp for better accuracy and timezone support
 created: 2020-05-14
 updated: 2020-05-14
-# TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
-  type: IOB
-  mime_type: text/plain
+  - type: IOB                        
+    url: https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_%28tagging%29
 domain: Natural Language Processing
 
-# Information about the entity that makes the data set avaialable
+# Information about the entity that makes the data set available
 provider:
   name: Data Asset eXchange
   url: https://developer.ibm.com/exchanges/data/all/groningen-meaning-bank/

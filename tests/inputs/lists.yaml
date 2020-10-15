@@ -1,7 +1,3 @@
-# top level list
-- item 1
-- item 2
----
 # string list
 string_list:
   - property item 1
@@ -14,3 +10,5 @@ dict_list:
   - property1: value1c
     property2: value2b
     property3: value3a
+
+string_key: string_value

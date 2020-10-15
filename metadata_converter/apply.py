@@ -14,8 +14,14 @@
 # limitations under the License.
 #
 from argparse import ArgumentParser
+from pathlib import Path
+from ruamel.yaml import YAML
+from ruamel.yaml.tokens import CommentToken
+from ruamel.yaml.comments import CommentedMap
 import re
-import yaml
+import sys
+
+yaml = YAML()
 
 
 # Raised if template contains a placeholder
@@ -27,83 +33,168 @@ class PlaceholderNotFoundError(Exception):
         super().__init__(self.message)
 
 
-# Raised if template contains a placeholder
-# which cannot be properly resolved
-class PlaceholderTypeNotSupportedError(Exception):
-    def __init__(self, placeholder, type):
-        self.placeholder = placeholder
-        self.type = type
-        self.message = 'Type "{}" is not supported for placeholder "{}".'\
-            .format(type, placeholder)
-        super().__init__(self.message)
+def replace(yaml_dict, template_dict):
+    """Replace matched {{...}} in template_dict with values from yaml_dict
 
+    :param yaml_dict: dict representation of a YAML document defining
+    placeholder values
+    :type yaml_dict: dict
+    :param template_dict: dict representation of a YAML document containing
+    '{{...}}' string placeholders
+    :type template_dict: dict
+    :raises PlaceholderNotFoundError: a {{...}} placeholder in template_dict
+    was not found in yaml_dict
+    :raises ValueError: at least one input parameter is invalid
+    :raises NotImplementedError: [description]
+    :return: yaml_dict with all '{{...}}' replaced
+    :rtype: dict
+    """
 
-def generate(yaml_dict, template):
+    def get_metadata(template_dict, key):
+        # If d is an instance of ruamel.yaml.comments.CommentedMap
+        # this method returns the metadata associated with the
+        # provided property key
 
-    # Helper; attempts to resolve a placeholder
-    # using the values provided in yaml_dict
-    # Raises PlaceholderNotFoundError
-    def replace_placeholder(match):
-        root = yaml_dict
+        if not isinstance(template_dict, CommentedMap):
+            return None
 
-        for property in match.group(1).split('.'):
-            root = root.get(property)
-            if root is None:
-                raise PlaceholderNotFoundError(match.group(1))
+        d = template_dict
 
-        return root
+        metadata = {
+            'comment': None,
+            'comment_text': None,
+            'annotations': set()
+        }
+        # raw comment, e.g. "# @optional another comment\n"
+        if key in d.ca.items:
+            if (len(d.ca.items.get(key)) > 2) and \
+               isinstance(d.ca.items.get(key)[2], CommentToken):
+                metadata['comment'] = d.ca.items.get(key)[2].value
+        # comment text, e.g. "another comment"
+        metadata['comment_text'] = metadata['comment']
+        # extract embedded annotations, e.g. "@optional"
+        if metadata['comment'] is not None:
+            # Extract @... annotations
+            for match in re.finditer('@([a-zA-Z]+)',
+                                     metadata['comment'],
+                                     re.I):
+                metadata['annotations'].add(match.group(1).lower())
+            # Remove noise from the comment, such as annotations
+            # comment characters and whitespace characters
+            #  - Remove annotations
+            for annotation in metadata['annotations']:
+                metadata['comment_text'] =\
+                    metadata['comment_text'].replace('@{}'.format(annotation),
+                                                     '')
+            #  - Remove '#' and whitespaces from the beginning of each line
+            #    This needs to be done twice to handle empty comments properly.
+            metadata['comment_text'] = re.sub(r'^\s*#\s*',
+                                              '',
+                                              metadata['comment_text'],
+                                              flags=re.MULTILINE)
+            metadata['comment_text'] = re.sub(r'^\s*#\s*',
+                                              '',
+                                              metadata['comment_text'],
+                                              flags=re.MULTILINE)
+            #  - remove whitespace chars from the end of each line
+            metadata['comment_text'] = re.sub(r'\s*$',
+                                              '',
+                                              metadata['comment_text'],
+                                              flags=re.MULTILINE)
 
-    if yaml_dict is None or template is None:
-        # nothing to do
-        return None
+            #  - remove newline from the end
+            metadata['comment_text'] = metadata['comment_text'].strip()
 
-    # compile the {{...}} placeholder search expression
-    p = re.compile('{{([a-zA-Z_.]+)}}', re.VERBOSE)
+            if len(metadata['comment_text']) == 0:
+                metadata['comment_text'] = None
+        return metadata
 
-    template_out = []
-    # replace placeholders in the template
-    for line in template:
-        r = p.search(line)
+    # pre-compile the {{...}} placeholder search expression
+    # outside `do_replace` to avoid doing it multiple times
+    p = re.compile(r'{{([\w\.]+)}}', re.VERBOSE)
+
+    def process_string(yaml_dict, str, metadata):
+        # determine whether {{...}} placeholder
+        # replacement is required
+        r = p.search(str)
         if r is None:
-            template_out.append(line)
-            continue
+            return str
+        else:
+            root = yaml_dict
+            for property in r.group(1).split('.'):
+                root = root.get(property)
+                if root is None:
+                    # check annotations to determine appropriate
+                    # behavior
+                    if metadata is not None and\
+                       'optional' in metadata['annotations']:
+                        return None
+                    else:
+                        raise PlaceholderNotFoundError(r.group(1))
+            return root
 
-        replacements = replace_placeholder(r)
-        if isinstance(replacements, str):
-            template_out.append(
-                line[:r.start()] +
-                replacements + line[r.end():])
-        elif isinstance(replacements, list):
-            for replacement in replacements:
-                if isinstance(replacement, str):
-                    # "- <replacement>"
-                    template_out.append(
-                            line[:r.start()] + '- ' +
-                            replacement + line[r.end():])
-                elif isinstance(replacement, dict):
-                    is_first = True
-                    for key in replacement.keys():
-                        # "- <replacement_key>: <replacement_value>"
-                        if is_first:
-                            template_out.append(
-                                line[:r.start()] + '- ' +
-                                key + ': ' +
-                                replacement[key] +
-                                line[r.end():])
-                            is_first = False
-                        else:
-                            # "  <replacement_key>: <replacement_value>"
-                            template_out.append(
-                                line[:r.start()] + '  ' +
-                                key + ': ' +
-                                replacement[key] +
-                                line[r.end():])
-                else:
-                    raise PlaceholderTypeNotSupportedError(
-                            r.group(1),
-                            type(replacement))
+    def process_list(yaml_dict, list_in, metadata):
+        list_out = []
+        for v in list_in:
+            # if v is a string process it
+            if(isinstance(v, str)):
+                list_out.append(process_string(yaml_dict, v, metadata))
+            elif(isinstance(v, dict)):
+                list_out.append(do_replace(yaml_dict, v))
+            elif(isinstance(v, list)):
+                list_out.append(process_list(yaml_dict, v, metadata))
+            else:
+                raise NotImplementedError(
+                        'Support for properties of type {} in lists '
+                        'is not implemented.'
+                        .format(type(v)))
+        return list_out
 
-    return template_out
+    # Recursive function does the actual work
+    def do_replace(yaml_dict, template_dict):
+
+        if yaml_dict is None or template_dict is None:
+            # nothing to do
+            return None
+
+        if not isinstance(yaml_dict, dict):
+            raise ValueError('Parameter \'yaml_dict\' must be of type '
+                             '\'dict\' not {}.'.format(type(yaml_dict)))
+
+        if not isinstance(template_dict, dict):
+            raise ValueError('Parameter \'template_dict\' must be of type '
+                             '\'dict\' not {}.'.format(type(template_dict)))
+
+        template_out = {}
+        # replace placeholders in the template, one value at a time
+        for key in template_dict.keys():
+            val = template_dict[key]
+            # print('Key: {} Value: {} Type: {}'.format(key, val, type(val)))
+            metadata = get_metadata(template_dict, key)
+            if val is None:
+                # NoneType - no value
+                template_out[key] = None
+            elif isinstance(val, str):
+                # process string
+                template_out[key] = process_string(yaml_dict,
+                                                   val,
+                                                   metadata)
+            elif isinstance(val, dict):
+                # process the dictionary recursively
+                template_out[key] = do_replace(yaml_dict, val)
+            elif isinstance(val, list):
+                # process each list item
+                template_out[key] = process_list(yaml_dict,
+                                                 val,
+                                                 metadata)
+            else:
+                raise NotImplementedError(
+                        'Support for properties of type {} is not implemented.'
+                        .format(type(val)))
+
+        return template_out
+
+    return do_replace(yaml_dict, template_dict)
 
 
 # Main entry point
@@ -123,23 +214,22 @@ if __name__ == "__main__":
 
     try:
         # load the input YAML
-        with open(args.input_yaml, 'r') as source_yaml:
-            in_yaml = yaml.load(source_yaml, Loader=yaml.FullLoader)
+        in_yaml = yaml.load(Path(args.input_yaml))
 
-        # load template
-        with open(args.template, 'r') as template_file:
-            in_template = template_file.readlines()
+        # load template YAML
+        in_template = yaml.load(Path(args.template))
 
         # replace placeholders in template
-        completed_template = generate(in_yaml, in_template)
+        out_yaml = replace(in_yaml, in_template)
+
+        yaml.indent(mapping=2, sequence=4, offset=2)
 
         # save completed template in file or STDOUT
         if args.output is not None:
             with open(args.output, 'w') as output_file:
-                output_file.writelines(completed_template)
+                yaml.dump(out_yaml, output_file)
         else:
-            for line in completed_template:
-                print(line.rstrip())
+            yaml.dump(out_yaml, sys.stdout)
 
     except FileNotFoundError as fnfe:
         # One of the input files was not found
