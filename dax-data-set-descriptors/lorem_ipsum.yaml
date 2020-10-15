@@ -36,6 +36,10 @@ content:
     size: 1M                          # size including units (E, P, T, G, M, K), if applicable
     type: CSV                         # file format (user friendly)
     mime_type: text/csv               # File MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
+    columns:                          # optional; only applies to column-oriented file formats 
+      - name: column_name             # 1st column name
+        description: column_descr     # 1st column description
+        type: str                     # 1st column data type (TODO - need to define values for types)
   - file_name: path/lorem-ipsum2.csv  # includes path
     description: l-i test data        # free form text describing the file content
     records: 3000                     # including units (E, P, T, G, M, K), if applicable
