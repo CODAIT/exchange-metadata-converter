@@ -18,7 +18,7 @@ provider:
 
 # identifies where the data set is stored and how it is stored (REQUIRED)
 repository:
-  type: HTTP 
+  type: HTTP
   url: https://dax-cdn.cdn.appdomain.cloud/dax-pubtabnet/2.0.0/pubtabnet.tar.gz
   mime_type: application/x-tar
   sha_512: 377e7bf408f2d1f13410447550cf1792a1e4e84585e5e8908d5807928ae468a42be49a025be9b7f407498f781e5a106a5f9ae0a0f5f452a135778813a9c0c100
@@ -40,7 +40,7 @@ content:
     type: regex
   - pattern: test/*
     description: Images in the testing subset
-    type: regex  
+    type: regex
   - pattern: PubTabNet_2.0.0.jsonl
     description: Data glossary of the three folders
     type: file
@@ -55,7 +55,7 @@ source:
     - name: Elaheh ShafieiBavani
       url: https://researcher.watson.ibm.com/researcher/view.php?person=ibm-Elaheh.Shafieibavani
     - name: Antonio Jimeno Yepes
-      url: https://researcher.watson.ibm.com/researcher/view.php?person=au1-antonio.jimeno     
+      url: https://researcher.watson.ibm.com/researcher/view.php?person=au1-antonio.jimeno
 
 # OPTIONAL; but recommended
 seo_tags:
