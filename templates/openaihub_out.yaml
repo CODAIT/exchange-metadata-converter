@@ -26,10 +26,10 @@ metadata:
     provider: '{{provider}}'
     repository: '{{repository}}'
     license: '{{license}}'
-    content:
-    source: '{{source}}'
-    seo_tags: '{{seo_tags}}'
-    related_assets: '{{related_assets}}'
+    content:                              # @optional
+    source: '{{source}}'                  # @optional
+    seo_tags: '{{seo_tags}}'              # @optional
+    related_assets: '{{related_assets}}'  # @optional
 spec:
   type: "ARCHIVE"
   url: '{{repository.url}}'
