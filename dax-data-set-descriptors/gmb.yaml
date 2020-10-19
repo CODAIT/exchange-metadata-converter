@@ -5,7 +5,7 @@ version: 1.0.2
 created: 2020-05-14
 updated: 2020-05-14
 format:
-  - type: IOB                        
+  - type: IOB
     url: https://en.wikipedia.org/wiki/Inside%E2%80%93outside%E2%80%93beginning_%28tagging%29
 domain: Natural Language Processing
 
@@ -16,10 +16,10 @@ provider:
 
 # identifies where the data set is stored and how it is stored (REQUIRED)
 repository:
-  type: HTTP 
+  type: HTTP
   url: https://dax-cdn.cdn.appdomain.cloud/dax-groningen-meaning-bank-modified/1.0.2/groningen-meaning-bank-modified.tar.gz
   mime_type: application/x-tar
-  sha_512: 4b0e6c445bf5be0573ae411f8e0ba307b884300ab6b5473ea0d455dd82b8cf4dc06fb77a9a606850f3b283357f22fd516e91850cea7e45de19ce5625fda2c001 
+  sha_512: 4b0e6c445bf5be0573ae411f8e0ba307b884300ab6b5473ea0d455dd82b8cf4dc06fb77a9a606850f3b283357f22fd516e91850cea7e45de19ce5625fda2c001
   size: 3.6M
 
 # REQUIRED; data set license information

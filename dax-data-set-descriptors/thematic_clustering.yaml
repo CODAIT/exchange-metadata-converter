@@ -10,7 +10,7 @@ format:
 domain: Natural Language Processing
 
 # Information about the entity that makes the data set available
-provider:                           # Information about the repository that makes the data set available 
+provider:
   name: Data Asset eXchange
   url: https://developer.ibm.com/exchanges/data/all/thematic-clustering-of-sentences/
 
@@ -50,7 +50,7 @@ source:
     - name: Ilya Shnayderman
     - name: Ranit Aharonov
     - name: Noam Slonim
-      url: https://resedit.watson.ibm.com/researcher/view.php?person=il-NOAMS           
+      url: https://resedit.watson.ibm.com/researcher/view.php?person=il-NOAMS
 # OPTIONAL; but recommended
 seo_tags:
   - Semantic Relatedness

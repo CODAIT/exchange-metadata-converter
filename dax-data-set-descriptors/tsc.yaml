@@ -16,10 +16,10 @@ provider:
 
 # identifies where the data set is stored and how it is stored (REQUIRED)
 repository:
-  type: HTTP 
+  type: HTTP
   url: https://dax-cdn.cdn.appdomain.cloud/dax-tensorflow-speech-commands/1.0.1/tensorflow-speech-commands.tar.gz
   mime_type: application/x-tar
-  sha_512: 1c4b41d9f719454f4155b4540e8aec0b1c5bfd555974f4e9e2253dd4e52b395ecc239f26a16a86ef047d1aac78a9ac1fe41f9c559a1d3478d951e4f078bb0fb8  
+  sha_512: 1c4b41d9f719454f4155b4540e8aec0b1c5bfd555974f4e9e2253dd4e52b395ecc239f26a16a86ef047d1aac78a9ac1fe41f9c559a1d3478d951e4f078bb0fb8
   size: 1.39G
 
 # REQUIRED; data set license information
@@ -32,8 +32,8 @@ license:
 content:
   - file_name: TODO
     description: TODO
-    records: 
-    size: 
+    records:
+    size:
     type: WAV
     mime_type: audio/wav
 
