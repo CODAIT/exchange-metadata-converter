@@ -32,12 +32,21 @@ license:
 
 # REQUIRED; describes relevant files in the data set archive
 content:
-  - file_name: TODO
-    description: Raw data file
-    records: TODO
-    size: TODOM
-    type: TODO
-    mime_type: TODO
+  - pattern: train/*
+    description: Images in the training subset
+    type: regex
+  - pattern: val/*
+    description: Images in the validation subset
+    type: regex
+  - pattern: test/*
+    description: Images in the testing subset
+    type: regex
+  - pattern: test.json
+    description: Annotations for training images
+    type: file  
+  - pattern: val.json
+    description: Annotations for validation images
+    type: file  
 
 # OPTIONAL; Identifies where the data set was obtained from
 source:

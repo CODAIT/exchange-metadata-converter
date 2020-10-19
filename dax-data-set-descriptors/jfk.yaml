@@ -2,10 +2,8 @@ id: noaa-weather-data–jfk-airport
 name: NOAA Weather Data – JFK Airport
 description: Local climatological data originally collected at JFK airport.
 version: 1.1.4
-# TBD use timestamp for better accuracy and timezone support
 created: 2019-07-19
 updated: 2020-07-19
-# TBD how to handle compound types (a data set comprises of multiple files using different format)
 format:
   - type: CSV
     url: https://en.wikipedia.org/wiki/Comma-separated_values
@@ -32,18 +30,20 @@ license:
 
 # REQUIRED; describes relevant files in the data set archive
 content:
-  - file_name: noaa-weather-data-jfk-airport/jfk_weather.csv
+  - pattern: noaa-weather-data-jfk-airport/jfk_weather.csv
     description: Raw data file
     records: 114546
     size: 30M
-    type: CSV
+    format: CSV
     mime_type: text/csv
-  - file_name: noaa-weather-data-jfk-airport/jfk_weather_cleaned.csv
+    type: file
+  - pattern: noaa-weather-data-jfk-airport/jfk_weather_cleaned.csv
     description: jfk_weather.csv cleaned-up using noaa-weather-data-jfk-airport/clean_data.py
     records: 75125
     size: 6M
-    type: CSV
+    format: CSV
     mime_type: text/csv
+    type: file
 
 # OPTIONAL; Identifies where the data set was obtained from
 source:

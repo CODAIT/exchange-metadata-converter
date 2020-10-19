@@ -2,7 +2,6 @@ id: groningen-meaning-bank–modified
 name: Groningen Meaning Bank – Modified
 description: A subset of the GMB dataset, consisting of documents verified to be in the public domain.
 version: 1.0.2
-# TBD use timestamp for better accuracy and timezone support
 created: 2020-05-14
 updated: 2020-05-14
 format:
@@ -31,11 +30,12 @@ license:
 
 # REQUIRED; describes relevant files in the data set archive
 content:
-  - file_name: groningen_meaning_bank_modified/gmb_subset_full.txt
+  - pattern: groningen_meaning_bank_modified/gmb_subset_full.txt
     description: The dataset contains only documents authored by Voice of America VOA, together with documents from the MASC dataset and the CIA World Factbook.
     records: 1314115
     size: 14.8M
-    type: IOB
+    type: file
+    format: IOB
     mime_type: text/plain
 
 # OPTIONAL; Identifies where the data set was obtained from
