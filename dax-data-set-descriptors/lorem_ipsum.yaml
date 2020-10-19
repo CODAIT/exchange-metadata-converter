@@ -10,13 +10,13 @@ format:
 domain: Lorem Ipsum domain          # application domain, e.g. Natural Language Processing
 
 # Information about the entity that makes the data set available
-provider:                           # Information about the repository that makes the data set available 
+provider:                           # Information about the repository that makes the data set available
   name: Data Asset eXchange         # Repository provider name
   url: https://.../lorem-ipsum/     # Repository provider URL (preferably data set specific)
 
 # identifies where the data set is stored and how it is stored (REQUIRED)
 repository:
-  type: HTTP                         # 
+  type: HTTP
   url: http://.../loremipsum.tar.gz  # Data set archive download URL
   mime_type: application/x-tar       # Data set archive MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
   sha_512: cf83e135...7eefb          # SHA-512 checksum of the data set file
@@ -37,7 +37,7 @@ content:
     format: CSV                       # file format (user friendly)
     type: file                        # "file" | "regex"
     mime_type: text/csv               # File MIME type (https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
-    columns:                          # optional; only applies to column-oriented file formats 
+    columns:                          # optional; only applies to column-oriented file formats
       - name: column_name             # 1st column name
         description: column_descr     # 1st column description
         type: str                     # 1st column data type (TODO - need to define values for types)
@@ -57,7 +57,7 @@ source:
   authors:                            # OPTIONAL; used to give credit to specific individuals
     - name: John Doe                  # Author name
       url: http://lorem.ipsum/john.d  # Arbitrary link for author
-      email: jdoe@entity-name.org     # Contact information for author 
+      email: jdoe@entity-name.org     # Contact information for author
 
 # OPTIONAL; but recommended
 seo_tags:                             # hints for classification and search
@@ -76,17 +76,17 @@ related_assets:
     mime_type: application/x-ipynb+json   # Jupyter notebook
     url: https://.../lorem-ipsum/nb.ipynb # Path to notebook
   # example 2 (Exported Watson Studio project)
-  - name: lorem ipsum WS project           # 
+  - name: lorem ipsum WS project           #
     description: WS sample project         # Contains notebooks for cleaning and analysis
     mime_type: application/zip             # ZIP file with proprietary structure
     url: https://github.com/.../p.zip      # Path to ZIP file
   # example 3 (Landing page for Watson Studio Gallery project)
-  - name: lorem ipsum WSG project          # 
+  - name: lorem ipsum WSG project          #
     description: WSG sample project        # Contains notebooks for cleaning and analysis
     mime_type: text/html                   # HTML page
     url: https://dataplatform...           # Path to landing page
   # example 4 (Web page containing data samples and glossary)
-  - name: Explore the data set             # 
+  - name: Explore the data set             #
     description: Data preview and glossary #
     mime_type: text/html                   # HTML page
     url: https://dax-cdn...                # Path to data preview and glossary pages

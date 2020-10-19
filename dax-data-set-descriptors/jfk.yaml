@@ -16,7 +16,7 @@ provider:
 
 # identifies where the data set is stored and how it is stored (REQUIRED)
 repository:
-  type: HTTP 
+  type: HTTP
   url: https://dax-cdn.cdn.appdomain.cloud/dax-noaa-weather-data-jfk-airport/1.1.4/noaa-weather-data-jfk-airport.tar.gz
   mime_type: application/x-tar
   sha_512:  e3f27a8fcc0db5289df356e3f48aef6df56236798d5b3ae3889d358489ec6609d2d797e4c4932b86016d2ce4a379ac0a0749b6fb2c293ebae4e585ea1c8422ac
