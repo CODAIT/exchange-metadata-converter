@@ -1,6 +1,15 @@
+[![PyPI version](https://badge.fury.io/py/exchange-metadata-converter.svg)](https://badge.fury.io/py/exchange-metadata-converter)
 [![Build Status](https://travis-ci.org/CODAIT/exchange-metadata-converter.svg?branch=main)](https://travis-ci.org/CODAIT/exchange-metadata-converter)
 
 ## Setup
+
+### Installing from PyPI
+
+The package is published on [PyPI](https://pypi.org/project/exchange-metadata-converter/).
+
+```
+$ pip install exchange-metadata-converter
+```
 
 ### Installing from source code
 
