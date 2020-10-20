@@ -18,20 +18,20 @@ import re
 import unittest
 
 #
-# Lints DAX descriptors
+# Lints built-in templates in /templates
 #
 
 
-class LintDescriptors(unittest.TestCase):
+class LintBuiltInTemplates(unittest.TestCase):
 
-    def test_dax_dataset_descriptors(self):
+    def test_internal_templates(self):
 
-        # Run linter over the built-in data set descriptors in
-        # dax-data-set-descriptors/
+        # Run linter over the built-in templates in
+        # templates/
         trailing_whitespace_list = []
         error_count = 0
         prog = re.compile(r'\s+\s$')
-        for descriptor in glob.iglob('dax-data-set-descriptors/*.yaml'):
+        for descriptor in glob.iglob('templates/*.yaml'):
             current_line = 0
             with open(descriptor, 'r') as d:
                 for line in d.readlines():
