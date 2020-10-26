@@ -15,7 +15,7 @@ apiVersion: com.ibm/v1alpha1
 kind: Dataset
 metadata:
   name: '{{name}}'
-  labels:
+  annotations:
     id: '{{id}}'
     description: '{{description}}'
     version: '{{version}}'
