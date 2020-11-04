@@ -44,7 +44,8 @@ class TestDLF(unittest.TestCase):
             out_dict = replace(self.in_yamls, self.template_yamls)
             self.assertTrue(out_dict is not None)
             self.assertTrue(isinstance(out_dict, dict))
-            self.assertEqual(out_dict['apiVersion'], 'com.ie.ibm.hpsys/v1alpha1')
+            self.assertEqual(out_dict['apiVersion'],
+                             'com.ie.ibm.hpsys/v1alpha1')
             self.assertEqual(out_dict['kind'], 'Dataset')
             self.assertEqual(out_dict['metadata']['name'],
                              self.in_yamls['name'])
