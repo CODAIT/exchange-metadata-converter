@@ -14,7 +14,7 @@
 apiVersion: com.ie.ibm.hpsys/v1alpha1
 kind: Dataset
 metadata:
-  name: '{{name}}'
+  name: '{{id}}'
   labels:
     version: '{{version}}'
 spec:
