@@ -48,7 +48,7 @@ class TestDLF(unittest.TestCase):
                              'com.ie.ibm.hpsys/v1alpha1')
             self.assertEqual(out_dict['kind'], 'Dataset')
             self.assertEqual(out_dict['metadata']['name'],
-                             self.in_yamls['name'])
+                             self.in_yamls['id'])
             self.assertEqual(out_dict['metadata']['labels']['version'],
                              self.in_yamls['version'])
             self.assertEqual(out_dict['spec']['type'],
