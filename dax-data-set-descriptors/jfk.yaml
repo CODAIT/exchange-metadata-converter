@@ -1,5 +1,5 @@
-id: noaa-weather-data–jfk-airport
-name: NOAA Weather Data – JFK Airport
+id: noaa-weather-data-jfk-airport
+name: NOAA Weather Data - JFK Airport
 description: Local climatological data originally collected at JFK airport.
 version: 1.1.4
 created: 2019-07-19
