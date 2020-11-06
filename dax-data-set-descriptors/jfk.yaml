@@ -1,5 +1,5 @@
-id: noaa-weather-data–jfk-airport
-name: NOAA Weather Data – JFK Airport
+id: noaa-weather-data-jfk-airport
+name: NOAA Weather Data - JFK Airport
 description: Local climatological data originally collected at JFK airport.
 version: 1.1.4
 created: 2019-07-19
@@ -14,7 +14,7 @@ provider:
   name: Data Asset eXchange
   url: https://developer.ibm.com/exchanges/data/all/jfk-weather-data/
 
-# identifies where the data set is stored and how it is stored (REQUIRED)
+# REQUIRED; identifies where the data set is stored and how it is stored
 repository:
   type: HTTP
   url: https://dax-cdn.cdn.appdomain.cloud/dax-noaa-weather-data-jfk-airport/1.1.4/noaa-weather-data-jfk-airport.tar.gz
