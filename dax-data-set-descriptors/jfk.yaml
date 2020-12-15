@@ -76,5 +76,6 @@ related_assets:
     description: OpenAIHub example notebook with data mount
     mime_type: application/x-ipynb+json
     url: https://github.ibm.com/OpenAIHub/openaihub/blob/master/notebooks/dlf-notebooks/JFK_Data.ipynb
-    application: OpenAIHub
-    asset_id: notebooks/jfk-airport-analysis
+    application:
+      name: OpenAIHub
+      asset_id: notebooks/jfk-airport-analysis
