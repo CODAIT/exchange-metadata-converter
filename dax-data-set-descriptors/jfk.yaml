@@ -74,7 +74,7 @@ related_assets:
     url: https://github.com/elyra-ai/examples/tree/master/pipelines/dax_noaa_weather_data
   - name: OpenAIHub notebook
     description: OpenAIHub exmple notebook with data mount
-    mime_type: application/yaml
-    url: https://github.ibm.com/OpenAIHub/openaihub/blob/master/notebooks/samples/JFK-airport.yaml
-#    application: OpenAIHub
-#    asset_id: notebooks/jfk-airport-analysis
+    mime_type: application/x-ipynb+json
+    url: https://github.ibm.com/OpenAIHub/openaihub/blob/master/notebooks/dlf-notebooks/JFK_Data.ipynb
+    application: OpenAIHub
+    asset_id: notebooks/jfk-airport-analysis
