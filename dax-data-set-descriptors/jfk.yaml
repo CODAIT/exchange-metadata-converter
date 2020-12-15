@@ -73,7 +73,7 @@ related_assets:
     mime_type: text/html
     url: https://github.com/elyra-ai/examples/tree/master/pipelines/dax_noaa_weather_data
   - name: OpenAIHub notebook
-    description: OpenAIHub exmple notebook with data mount
+    description: OpenAIHub example notebook with data mount
     mime_type: application/x-ipynb+json
     url: https://github.ibm.com/OpenAIHub/openaihub/blob/master/notebooks/dlf-notebooks/JFK_Data.ipynb
     application: OpenAIHub
